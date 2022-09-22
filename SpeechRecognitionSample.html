@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeechRecognitionSample</title>
+</head>
+<body>
+    <p>STATUS: <span id="status"></span></p>
+    <p id="result" style="font-size: 400%;"></p>
+    <script>
+        SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.interimResults = true;
+        recognition.continuous = true;
+        recognition.onresult = (e) => {
+            console.log(e);
+            const el = document.getElementById('result');
+            const resultIndex = e.resultIndex;
+            if (e.results[resultIndex].isFinal) {
+                el.style.color = 'green';
+            } else {
+                el.style.color = 'orange';
+            }
+            el.innerText = e.results[resultIndex][0].transcript;
+        }
+        recognition.onstart = (e) => {
+            document.getElementById('status').innerText = 'started';
+        }
+        recognition.onend = (e) => {
+            document.getElementById('status').innerText = 'ended';
+            recognition.start()
+        }
+        recognition.start();
+    </script>
+</body>
+</html>
